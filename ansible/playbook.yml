@@ -12,6 +12,25 @@
         name: "{{ required_packages }}"
         state: present
 
+    - name: Configure Glassfish for systemd
+      shell: |
+        cat << EOF > "/lib/systemd/system/{{ glassfish_systemd_service_name }}.service"
+        [Unit]
+        Description = GlassFish Server
+        After = syslog.target network.target
+        
+        [Service]
+        ExecStart={{ glassfish_directory }}/bin/asadmin start-domain
+        ExecReload={{ glassfish_directory }}/bin/asadmin restart-domain
+        ExecStop={{ glassfish_directory }}/bin/asadmin stop-domain
+        Type = forking
+        
+        [Install]
+        WantedBy = multi-user.target
+        EOF
+      args:
+        creates: "/lib/systemd/system/{{ glassfish_systemd_service_name }}.service"
+
     - name: Create AppDynamics Java Agent Installer Directory
       file:
         path: "{{ java_agent_directory }}" 
