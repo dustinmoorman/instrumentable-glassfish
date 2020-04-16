@@ -243,6 +243,12 @@
       systemd:
         daemon_reload: yes
 
+    - name: Start Glassfish server
+      service:
+        name: "{{ glassfish_systemd_service_name }}"
+        enabled: true
+        state: restarted
+
     - name: Start Machine Agent service
       service:
         name: "{{ machine_agent_systemd_service_name }}"
