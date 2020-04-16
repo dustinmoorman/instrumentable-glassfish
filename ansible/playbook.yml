@@ -16,6 +16,12 @@
         name: "{{ required_packages }}"
         state: present
 
+    - name: Create Glassfish Directory
+      file:
+        path: "{{ glassfish_directory }}"
+        state: directory
+        mode: "0755"
+
     - name: Download & decompress Glassfish server
       unarchive:
         src: "{{ glassfish_source }}"
@@ -30,9 +36,9 @@
         After = syslog.target network.target
         
         [Service]
-        ExecStart={{ glassfish_directory }}/bin/asadmin start-domain
-        ExecReload={{ glassfish_directory }}/bin/asadmin restart-domain
-        ExecStop={{ glassfish_directory }}/bin/asadmin stop-domain
+        ExecStart={{ glassfish_directory }}/glassfish5/bin/asadmin start-domain
+        ExecReload={{ glassfish_directory }}/glassfish5/bin/asadmin restart-domain
+        ExecStop={{ glassfish_directory }}/glassfish5/bin/asadmin stop-domain
         Type = forking
         
         [Install]
